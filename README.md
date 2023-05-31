@@ -323,8 +323,8 @@ systemctl restart grafana-server
 Access http://IP:3000/?orgId=1 to config datasource
 Import dashboard from https://grafana.com/grafana/dashboards/16485
 
-![App Screenshot](img/datasourceelastic.jpg)
-<p align="center"><img src="img/gitops_conceptual_diagram.svg" alt="Conceptual diagram of GitOps-based infrastructure" width="800px" /></p>
+![App Screenshot](imgs/datasourceelastic.jpg)
+<p align="center"><img src="imgs/datasourceelastic.jpg" alt="Conceptual diagram of GitOps-based infrastructure" width="800px" /></p>
 Access http://IP:3000/?orgId=1 to config datasource
 Import dashboard from https://grafana.com/grafana/dashboards/16485
 
