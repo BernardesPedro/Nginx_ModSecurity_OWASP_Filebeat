@@ -218,8 +218,10 @@ vi  /etc/nginx/conf.d/web.conf
  nginx -t
  nginx -s reload
 ```
-## Referência
-Thanks 
+## Reference
+Thanks Nguyenchihoa
+
  - [Nguyenchihoa blogspot ](https://nguyenchihoa.blogspot.com/2022/06/)
+ - [GeoLite Project ](https://github.com/P3TERX/GeoLite.mmdb/)
 
 
