@@ -1,0 +1,72 @@
+version: '3'
+services:
+  elastic:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:8.8.0"
+    restart: always
+    environment:
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=password
+      - xpack.security.enabled=true
+      - http.host=0.0.0.0
+      - discovery.type=single-node
+      - path.repo=/usr/share/elasticsearch/data/backup
+    volumes:
+      - './elastic/data/:/usr/share/elasticsearch/data'
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:8.8.0"
+    ports:
+      - 80:5601
+    restart: always
+    environment:
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=password
+      - ELASTICSEARCH_HOSTS=http://elastic:9200 ## << URL your Elasticsarch
+      - XPACK_GRAPH_ENABLED=true
+      #- SERVER_PUBLICBASEURL=http://kibana.audit.com.br 
+      - XPACK_WATCHER_ENABLED=true
+      - XPACK_ML_ENABLED=true
+      - XPACK_MONITORING_ENABLED=true
+      - XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
+    #volumes:
+    #  - '/mnt/volume_nyc3_05/kibana/data/:/usr/share/kibana'
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.3
+    container_name: logstash
+    restart: always
+    environment:
+       - LS_JAVA_OPTS= "-Xmx1g -Xms1g"
+    volumes:
+      - ./logstash/owasp.conf:/etc/logstash/conf.d/owasp.conf
+      - ./logstash/GeoLite2-City.mmdb:/etc/logstash/conf.d/GeoLite2-City.mmdb
+      
+    filebeat:
+    image: docker.elastic.co/filebeat/filebeat:8.8.0
+    command:
+      - filebeat -e
+    container_name: filebeat
+    restart: always
+    environment:
+       - LS_JAVA_OPTS= "-Xmx1g -Xms1g"
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/log/nginx/error.log:/var/log/nginx/error.log ## <<< location log your nginx server
+      
+  redis:
+    image: redis:7.0.4-alpine
+    ports:
+      - 6060:6379
+    container_name: redis
+    restart: always
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+    environment:
+       - ALLOW_EMPTY_PASSWORD=no
+       - REDIS_PASSWORD=senha
+       - REDIS_TLS_ENABLED=no
+       - REDIS_PORT=6060
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf 
